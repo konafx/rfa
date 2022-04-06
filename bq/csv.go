@@ -39,7 +39,7 @@ type Details struct {
 	TotalQuantity int       `json:"total_quantity" csv:"total_quantity"`
 }
 
-func (tweetInfo *TweetInfo) CreateCsv(text string) (csvFile *os.File, err error) {
+func (tweetInfo *TweetInfo) CreateCsv(text string, noDetail bool) (csvFile *os.File, err error) {
 	lines := replaceLines(strings.Split(text, "\n"))
 	lastWords := lines[len(lines)-2]
 
@@ -50,6 +50,9 @@ func (tweetInfo *TweetInfo) CreateCsv(text string) (csvFile *os.File, err error)
 
 	// details
 	case strings.HasSuffix(lastWords, "とじる"), strings.HasSuffix(lastWords, "Close"):
+		if noDetail {
+			return
+		}
 		csvFile, err = tweetInfo.createCsvDetails(lines)
 	}
 	return

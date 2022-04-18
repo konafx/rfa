@@ -3,7 +3,6 @@ package bq
 import (
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -12,6 +11,7 @@ import (
 	"time"
 
 	"github.com/gocarina/gocsv"
+	"go.uber.org/zap"
 )
 
 var RQuantity *regexp.Regexp = regexp.MustCompile(`^[0-9]+`)
@@ -147,7 +147,7 @@ func (tweetInfo *TweetInfo) setSummary(lines []string, i int) (summary []*Summar
 	for i := len(numerics); i < len(lines); i++ {
 		lines[i] = ""
 	}
-	log.Printf("summary numerics: %q", numerics)
+	zap.S().Debug("summary numerics", numerics)
 
 	// 処理済みの配列要素番号
 	mark_initial := len(numerics) // 初期値はMAX
@@ -189,7 +189,7 @@ func (tweetInfo *TweetInfo) setSummary(lines []string, i int) (summary []*Summar
 		}
 	}
 	msgTotals := fmt.Sprintf("duration %v, %vkcal, %vkm", totalTimeExcercising, totalCaloriesBurned, totalDistanceRun)
-	log.Println(msgTotals)
+	zap.S().Debug(msgTotals)
 
 	remains := len(marks) // 残りの処理必要数
 	for _, v := range marks {
@@ -226,7 +226,7 @@ func (tweetInfo *TweetInfo) setSummary(lines []string, i int) (summary []*Summar
 		}
 	}
 	numerics = numerics[:n]
-	log.Printf("filter marks: %q", numerics)
+	zap.S().Debug("filter marks", numerics)
 
 	for i := 0; i < len(numerics); i++ {
 		v := numerics[i]
@@ -255,14 +255,14 @@ func (tweetInfo *TweetInfo) setSummary(lines []string, i int) (summary []*Summar
 		numerics[i], numerics[opp] = numerics[opp], numerics[i]
 	}
 
-	log.Printf("process stack mode: %q\n", numerics)
+	zap.S().Debug("process stack mode", numerics)
 
 	var stack string = ""
 	STACK:
 	for i, v := range numerics {
 		match := RNumeric.FindString(v)
 		if len(match) == 0 {
-			log.Fatal("")
+			zap.L().Fatal("non numeric string in Array of Numerics (TODO)")
 		}
 		if len(stack) == 0 {
 			stack = match
@@ -323,13 +323,13 @@ func (tweetInfo *TweetInfo) createCsvDetails(lines []string) (csvFile *os.File, 
 		} else if isExercise && !isEven &&
 			rExercise.MatchString(line) &&
 			rExercise.MatchString(lines[i+1]) {
-				log.Printf("setdetail %d", i)
+				zap.L().Debug("setdetail", zap.Int("lineNumber", i))
 				tweetInfo.setDetails(&details, line, lines[i+4])
 				tweetInfo.setDetails(&details, lines[i+1], lines[i+3])
 				tweetInfo.setDetails(&details, lines[i+2], lines[i+5])
 			break
 		} else if isExercise && rExercise.MatchString(line) {
-			log.Printf("setdetail %s=%s", line, lines[i+1])
+			zap.L().Debug("setdetail", zap.Int("lineNumber", i))
 			tweetInfo.setDetails(&details, line, lines[i+1])
 		}
 

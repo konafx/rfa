@@ -3,7 +3,6 @@ package search
 import (
 	"errors"
 	"fmt"
-	"log"
 	"os"
 	"strconv"
 	"time"
@@ -15,6 +14,7 @@ import (
 	"github.com/tosh223/rfa/vision_texts"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/api/googleapi"
+	"go.uber.org/zap"
 )
 
 const twitterSecretID string = "rfa"
@@ -73,14 +73,14 @@ func getLastExecutedAt(projectID string, location string, twitterId string) (las
 			switch gerr.Code {
 			case 404:
 				lastExecutedAt = time.Time{}
-				log.Printf("bigquery return 404 %v", err)
+				zap.L().Error("bigquery return 404", zap.Error(err))
 				err = nil
 			default:
-				log.Printf("Fatal %v", err)
+				zap.L().Error("google api return error code", zap.Error(err))
 				return
 			}
 		} else {
-			log.Printf("Fatal %v", err)
+			zap.L().Error("google api return not ok", zap.Error(err))
 			return
 		}
 	} else if latest == nil {
@@ -112,7 +112,7 @@ func worker(ctx context.Context, r twitter.Rslt, projectID *string, twitterId *s
 		// Pixela
 		pxCfg, err := pixela.GetConfig(*projectID, pixelaSecretID)
 		if err != nil {
-			log.Println("Skip Pixela")
+			zap.L().Debug("Skip Pixela")
 			return nil
 		}
 
@@ -125,7 +125,7 @@ func worker(ctx context.Context, r twitter.Rslt, projectID *string, twitterId *s
 }
 
 func detecter(projectID string, twitterId string, createdAt time.Time, url string) error {
-	fmt.Println(url)
+	zap.L().Debug(fmt.Sprintf("url %s", url))
 	file, err := twitter.GetImage(url)
 	if err != nil {
 		return err

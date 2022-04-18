@@ -3,11 +3,11 @@ package vision_texts
 import (
 	"context"
 	"fmt"
-	"log"
 	"os"
 	"strings"
 
 	vision "cloud.google.com/go/vision/apiv1"
+	"go.uber.org/zap"
 )
 
 func Detect(filename string) string {
@@ -15,37 +15,36 @@ func Detect(filename string) string {
 	ctx := context.Background()
 	client, err := vision.NewImageAnnotatorClient(ctx)
 	if err != nil {
-		log.Fatalf("Failed to create client: %v", err)
+		zap.L().Fatal("Failed to create client", zap.Error(err))
 	}
 	defer client.Close()
 
 	file, err := os.Open(filename)
 	if err != nil {
-		log.Fatalf("Failed to read file: %v", err)
+		zap.L().Fatal("Failed to read file", zap.Error(err))
 	}
 	defer file.Close()
 
 	image, err := vision.NewImageFromReader(file)
 	if err != nil {
-		log.Fatalf("Failed to create image: %v", err)
+		zap.L().Fatal("Failed to create image", zap.Error(err))
 	}
 
 	annotations, err := client.DetectTexts(ctx, image, nil, 10)
 	if err != nil {
-		log.Fatalf("Failed to detect labels: %v", err)
+		zap.L().Fatal("Failed to detect labels", zap.Error(err))
 	}
 
 	if len(annotations) == 0 {
-		fmt.Println("No text found.")
-		os.Exit(0)
+		zap.S().Warn("No text found.")
+		return ""
 	}
 
 	result := annotations[0].Description
 	if contains(strings.Split(result, "\n"), "本日の運動結果") ||
 		contains(strings.Split(result, "\n"), "Today's Results") {
 
-		fmt.Printf("Detect results: %s\n", filename)
-		fmt.Println(result)
+		zap.L().Info(fmt.Sprintf("Detect results: %s\n", filename), zap.String("result", result))
 		return result
 	}
 

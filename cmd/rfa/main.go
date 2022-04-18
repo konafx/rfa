@@ -1,12 +1,13 @@
 package main
 
 import (
+	"log"
 	"fmt"
 	"context"
-	"os"
 
 	"github.com/tosh223/rfa/search"
 	"github.com/spf13/cobra"
+	"go.uber.org/zap"
 )
 
 var rootCmd = &cobra.Command{
@@ -32,12 +33,18 @@ var rootCmd = &cobra.Command{
 
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		zap.L().Fatal("Failed", zap.Error(err))
 	}
 }
 
 func main() {
+	logger, err := zap.NewDevelopment()
+	if err != nil {
+		log.Fatalf("zapdriver failed %v", err)
+	}
+	defer logger.Sync()
+	zap.ReplaceGlobals(logger)
+
 	Execute()
 }
 

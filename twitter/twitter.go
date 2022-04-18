@@ -14,6 +14,7 @@ import (
 
 	"github.com/tosh223/rfa/gcpsecretmanager"
 
+	"go.uber.org/zap"
 	"github.com/ChimeraCoder/anaconda"
 )
 
@@ -70,8 +71,7 @@ func (cfg *CfgList) Search(user *string, count int, lastExecutedAt time.Time) (r
 	if err != nil {
 		return
 	}
-	fmt.Println("Search results:")
-	fmt.Println(searchResult)
+	zap.S().Info(searchResult)
 
 	for _, tweet := range searchResult.Statuses {
 		var urls []string

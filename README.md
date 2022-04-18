@@ -59,8 +59,8 @@ Usage:
 
 ```sh
 # build and serve
-go build ./cmd/server
-./server
+go build
+./rfa
 
 # access
 curl "http://localhost:8080/?projectId=<project-id>&twitterId=<username>&location=<bigquery-location>&size=<search-size>"
@@ -76,7 +76,7 @@ gcloud run deploy
 
 1. Create service account
 1. Update an existing service to have a new runtime service account
-  - `$ gcloud run services udpate <cloudrun-service-name> --service-account <service account address>`
+  - `$ gcloud run services update <cloudrun-service-name> --service-account <service account address>`
 1. Deploy
 
 #### URI: `/for/participants`

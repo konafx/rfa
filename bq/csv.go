@@ -61,7 +61,7 @@ type Details struct {
 }
 
 func (tweetInfo *TweetInfo) CreateCsv(text string) (csvFile *os.File, err error) {
-	lines := replaceLines(strings.Split(text, "\n"))
+	lines := trimLines(strings.Split(text, "\n"))
 
 	class := classificateDetectedText(text)
 	switch class {
@@ -389,24 +389,11 @@ func replaceTimeUnit(strTotalTime string) string {
 	return strTotalTime
 }
 
-func replaceLines(lines []string) (rLines []string) {
-	replaceStr2d := [][]string{
-		{"Om(", "0m("},
-		{"0(", "回("},
-		{"押しにみ", "押しこみ"},
-		{"スクワフット", "スクワット"},
-		{"- ", ""},
-		{" m", "m"},
-		{"Im(", "1m("},
-	}
-
+func trimLines(lines []string) (tLines []string) {
 	for _, line := range lines {
-		rLine := strings.TrimSpace(strings.Trim(line, "*"))
-		for _, replaceStr := range replaceStr2d {
-			rLine = strings.Replace(rLine, replaceStr[0], replaceStr[1], 1)
-		}
-		rLineSplited := strings.Split(rLine, " ")
-		rLines = append(rLines, rLineSplited...)
+		tLine := strings.TrimSpace(strings.Trim(line, "*"))
+		tLineSplited := strings.Split(tLine, " ")
+		tLines = append(tLines, tLineSplited...)
 	}
 	return
 }

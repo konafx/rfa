@@ -1,20 +1,21 @@
 package search
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"os"
 	"strconv"
 	"time"
-	"context"
 
 	"github.com/tosh223/rfa/bq"
+	"github.com/tosh223/rfa/firestore"
 	"github.com/tosh223/rfa/pixela"
 	"github.com/tosh223/rfa/twitter"
 	"github.com/tosh223/rfa/vision_texts"
+	"go.uber.org/zap"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/api/googleapi"
-	"go.uber.org/zap"
 )
 
 const twitterSecretID string = "rfa"
@@ -142,7 +143,14 @@ func detecter(projectID string, twitterId string, createdAt time.Time, url strin
 		CreatedAt: createdAt,
 		ImageUrl:  url,
 	}
-	csvFile, err := tweetInfo.CreateCsv(text)
+
+	replacers, err := firestore.GetReplacers(context.Background(), projectID)
+	if err != nil {
+		return err
+	}
+	trueText := vision_texts.ReplaceFalse(text, replacers)
+
+	csvFile, err := tweetInfo.CreateCsv(trueText)
 	if err != nil {
 		return err
 	}

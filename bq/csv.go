@@ -23,6 +23,7 @@ var RCalorie *regexp.Regexp = regexp.MustCompile(`kcal`)
 var RDistance *regexp.Regexp = regexp.MustCompile(`km`)
 
 type SummaryColumn int
+
 const (
 	TotalTimeExcercising SummaryColumn = iota
 	TotalCaloriesBurned
@@ -30,6 +31,7 @@ const (
 )
 
 type TypeDetectedText int
+
 const (
 	UndefinedText = iota
 	SummaryText
@@ -79,7 +81,7 @@ func (tweetInfo *TweetInfo) CreateCsv(text string) (csvFile *os.File, err error)
 }
 
 var (
-	RNext = regexp.MustCompile(`(?:次へ|Next)`)
+	RNext  = regexp.MustCompile(`(?:次へ|Next)`)
 	RClose = regexp.MustCompile(`(?:とじる|Close)`)
 )
 
@@ -153,8 +155,8 @@ func (tweetInfo *TweetInfo) setSummary(lines []string, i int) (summary []*Summar
 	mark_initial := len(numerics) // 初期値はMAX
 	marks := map[SummaryColumn]int{
 		TotalTimeExcercising: mark_initial,
-		TotalCaloriesBurned: mark_initial,
-		TotalDistanceRun: mark_initial,
+		TotalCaloriesBurned:  mark_initial,
+		TotalDistanceRun:     mark_initial,
 	}
 	for i, v := range numerics {
 		if str := RJapanTimeDuration.FindString(v); len(str) > 0 {
@@ -165,7 +167,7 @@ func (tweetInfo *TweetInfo) setSummary(lines []string, i int) (summary []*Summar
 			}
 			marks[TotalTimeExcercising] = i
 		} else if strDecimal := RDecimal.FindString(v); len(strDecimal) > 0 {
-			DECIMAL:
+		DECIMAL:
 			for _, w := range numerics[i:] {
 				switch {
 				case RCalorie.MatchString(w):
@@ -218,7 +220,7 @@ func (tweetInfo *TweetInfo) setSummary(lines []string, i int) (summary []*Summar
 	// filter marks
 	n := 0
 	for i, v := range numerics {
-		switch  {
+		switch {
 		case i == marks[TotalTimeExcercising] || i == marks[TotalCaloriesBurned] || i >= marks[TotalDistanceRun]:
 		default:
 			numerics[n] = v
@@ -258,7 +260,7 @@ func (tweetInfo *TweetInfo) setSummary(lines []string, i int) (summary []*Summar
 	zap.S().Debug("process stack mode", numerics)
 
 	var stack string = ""
-	STACK:
+STACK:
 	for i, v := range numerics {
 		match := RNumeric.FindString(v)
 		if len(match) == 0 {
@@ -323,10 +325,10 @@ func (tweetInfo *TweetInfo) createCsvDetails(lines []string) (csvFile *os.File, 
 		} else if isExercise && !isEven &&
 			rExercise.MatchString(line) &&
 			rExercise.MatchString(lines[i+1]) {
-				zap.L().Debug("setdetail", zap.Int("lineNumber", i))
-				tweetInfo.setDetails(&details, line, lines[i+4])
-				tweetInfo.setDetails(&details, lines[i+1], lines[i+3])
-				tweetInfo.setDetails(&details, lines[i+2], lines[i+5])
+			zap.L().Debug("setdetail", zap.Int("lineNumber", i))
+			tweetInfo.setDetails(&details, line, lines[i+4])
+			tweetInfo.setDetails(&details, lines[i+1], lines[i+3])
+			tweetInfo.setDetails(&details, lines[i+2], lines[i+5])
 			break
 		} else if isExercise && rExercise.MatchString(line) {
 			zap.L().Debug("setdetail", zap.Int("lineNumber", i))
@@ -351,7 +353,7 @@ func (tweetInfo *TweetInfo) createCsvDetails(lines []string) (csvFile *os.File, 
 	return
 }
 
-func (tweetInfo *TweetInfo) setDetails(details *[]*Details, nameLine string, quantityLine string) (err error){
+func (tweetInfo *TweetInfo) setDetails(details *[]*Details, nameLine string, quantityLine string) (err error) {
 	rTotalQuantity := regexp.MustCompile(`\([0-9]+`)
 
 	strQuantity := RQuantity.FindAllString(quantityLine, 1)

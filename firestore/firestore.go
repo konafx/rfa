@@ -7,8 +7,8 @@ import (
 	"google.golang.org/api/iterator"
 )
 
-type Participant struct{
-	ID string
+type Participant struct {
+	ID     string
 	Active bool `firestore:"active"`
 }
 
@@ -29,7 +29,7 @@ func GetParticipants(ctx context.Context, projectID string) (participants []Part
 		if err != nil {
 			return participants, err
 		}
-		
+
 		if err = doc.DataTo(&participant); err != nil {
 			return participants, err
 		}
@@ -42,9 +42,9 @@ func GetParticipants(ctx context.Context, projectID string) (participants []Part
 	return
 }
 
-type Replacer struct{
+type Replacer struct {
 	Before string `firestore:"before"`
-	After string `firestore:"after"`
+	After  string `firestore:"after"`
 }
 
 func GetReplacers(ctx context.Context, projectID string) (replacers []Replacer, err error) {

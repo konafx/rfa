@@ -17,35 +17,6 @@ func TestReplaceTimeUnit(t *testing.T) {
 	}
 }
 
-func TestReplaceLines(t *testing.T) {
-	in_string := []string{
-		"Om(19809m)",
-		"320(486回)",
-		"おなか押しにみひねり",
-		"バンザイスクワフット",
-		"- 5回(5回)",
-		"2 m(19809m)",
-		"Im(801m)",
-	}
-	wants := []string{
-		"0m(19809m)",
-		"32回(486回)",
-		"おなか押しこみひねり",
-		"バンザイスクワット",
-		"5回(5回)",
-		"2m(19809m)",
-		"1m(801m)",
-	}
-	out_string := replaceLines(in_string)
-	for idx, out := range out_string {
-		want := wants[idx]
-		if out != want {
-			err := errors.Errorf("Fail.\n[out ]: %s\n[want]: %s", out, want)
-			t.Error(err)
-		}
-	}
-}
-
 func TestCreateCsvDetails(t *testing.T) {
 	tweetInfo := TweetInfo{
 		TwitterId: "test",
@@ -123,12 +94,12 @@ func TestSetSummaryB(t *testing.T) {
 	}
 
 	want := Summary{
-		TwitterId: "test",
-		CreatedAt: time.Time{},
-		ImageUrl: "https://example.com",
+		TwitterId:            "test",
+		CreatedAt:            time.Time{},
+		ImageUrl:             "https://example.com",
 		TotalTimeExcercising: time.Duration(12*time.Minute + 13*time.Second),
-		TotalCaloriesBurned: 10.11,
-		TotalDistanceRun: 0.14,
+		TotalCaloriesBurned:  10.11,
+		TotalDistanceRun:     0.14,
 	}
 	s, err := tweetInfo.setSummary(in_lines, 3)
 	if err != nil {
@@ -167,12 +138,12 @@ func TestSetSummaryC(t *testing.T) {
 	}
 
 	want := Summary{
-		TwitterId: "test",
-		CreatedAt: time.Time{},
-		ImageUrl: "https://example.com",
+		TwitterId:            "test",
+		CreatedAt:            time.Time{},
+		ImageUrl:             "https://example.com",
 		TotalTimeExcercising: time.Duration(12*time.Minute + 13*time.Second),
-		TotalCaloriesBurned: 10.11,
-		TotalDistanceRun: 0.14,
+		TotalCaloriesBurned:  10.11,
+		TotalDistanceRun:     0.14,
 	}
 	s, err := tweetInfo.setSummary(in_lines, 3)
 	if err != nil {
@@ -210,12 +181,12 @@ func TestSetSummaryD(t *testing.T) {
 	}
 
 	want := Summary{
-		TwitterId: "test",
-		CreatedAt: time.Time{},
-		ImageUrl: "https://example.com",
+		TwitterId:            "test",
+		CreatedAt:            time.Time{},
+		ImageUrl:             "https://example.com",
 		TotalTimeExcercising: time.Duration(12*time.Minute + 13*time.Second),
-		TotalCaloriesBurned: 10.11,
-		TotalDistanceRun: 0.14,
+		TotalCaloriesBurned:  10.11,
+		TotalDistanceRun:     0.14,
 	}
 	s, err := tweetInfo.setSummary(in_lines, 3)
 	if err != nil {
@@ -253,12 +224,12 @@ func TestSetSummaryE(t *testing.T) {
 	}
 
 	want := Summary{
-		TwitterId: "test",
-		CreatedAt: time.Time{},
-		ImageUrl: "https://example.com",
+		TwitterId:            "test",
+		CreatedAt:            time.Time{},
+		ImageUrl:             "https://example.com",
 		TotalTimeExcercising: time.Duration(1*time.Hour + 12*time.Minute + 13*time.Second),
-		TotalCaloriesBurned: 10.11,
-		TotalDistanceRun: 0.14,
+		TotalCaloriesBurned:  10.11,
+		TotalDistanceRun:     0.14,
 	}
 	s, err := tweetInfo.setSummary(in_lines, 3)
 	if err != nil {
@@ -298,12 +269,12 @@ func TestSetSummaryZ(t *testing.T) {
 	}
 
 	want := Summary{
-		TwitterId: "test",
-		CreatedAt: time.Time{},
-		ImageUrl: "https://example.com",
+		TwitterId:            "test",
+		CreatedAt:            time.Time{},
+		ImageUrl:             "https://example.com",
 		TotalTimeExcercising: time.Duration(12*time.Minute + 13*time.Second),
-		TotalCaloriesBurned: 10.11,
-		TotalDistanceRun: 0.14,
+		TotalCaloriesBurned:  10.11,
+		TotalDistanceRun:     0.14,
 	}
 	s, err := tweetInfo.setSummary(in_lines, 3)
 	if err != nil {
@@ -342,12 +313,12 @@ func TestSetSummaryY(t *testing.T) {
 	}
 
 	want := Summary{
-		TwitterId: "test",
-		CreatedAt: time.Time{},
-		ImageUrl: "https://example.com",
+		TwitterId:            "test",
+		CreatedAt:            time.Time{},
+		ImageUrl:             "https://example.com",
 		TotalTimeExcercising: time.Duration(9*time.Minute + 1*time.Second),
-		TotalCaloriesBurned: 48.12,
-		TotalDistanceRun: 0.9,
+		TotalCaloriesBurned:  48.12,
+		TotalDistanceRun:     0.9,
 	}
 	s, err := tweetInfo.setSummary(in_lines, 3)
 	if err != nil {
@@ -388,12 +359,12 @@ func TestSetSummary20220414(t *testing.T) {
 	}
 
 	want := Summary{
-		TwitterId: "test",
-		CreatedAt: time.Time{},
-		ImageUrl: "https://example.com",
+		TwitterId:            "test",
+		CreatedAt:            time.Time{},
+		ImageUrl:             "https://example.com",
 		TotalTimeExcercising: time.Duration(22*time.Minute + 5*time.Second),
-		TotalCaloriesBurned: 73.21,
-		TotalDistanceRun: 1.26,
+		TotalCaloriesBurned:  73.21,
+		TotalDistanceRun:     1.26,
 	}
 	s, err := tweetInfo.setSummary(in_lines, 3)
 	if err != nil {

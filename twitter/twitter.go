@@ -14,8 +14,8 @@ import (
 
 	"github.com/tosh223/rfa/gcpsecretmanager"
 
-	"go.uber.org/zap"
 	"github.com/ChimeraCoder/anaconda"
+	"go.uber.org/zap"
 )
 
 type CfgList struct {

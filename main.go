@@ -3,9 +3,9 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
-	"log"
 
 	"github.com/tosh223/rfa/firestore"
 	"github.com/tosh223/rfa/search"
@@ -15,15 +15,15 @@ import (
 )
 
 type Page struct {
-  Title string
-  Count int
+	Title string
+	Count int
 }
 
 func main() {
 	var (
-		onGcp = os.Getenv("ON_GCP")
+		onGcp  = os.Getenv("ON_GCP")
 		logger *zap.Logger
-		err error
+		err    error
 	)
 
 	if onGcp == "true" {
@@ -71,7 +71,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if len(query["twitterId"]) >0 {
+	if len(query["twitterId"]) > 0 {
 		twitterID = query["twitterId"][0]
 	} else {
 		msg := "Parameter[twitterId] not found."

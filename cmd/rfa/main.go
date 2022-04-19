@@ -1,12 +1,12 @@
 package main
 
 import (
-	"log"
-	"fmt"
 	"context"
+	"fmt"
+	"log"
 
-	"github.com/tosh223/rfa/search"
 	"github.com/spf13/cobra"
+	"github.com/tosh223/rfa/search"
 	"go.uber.org/zap"
 )
 

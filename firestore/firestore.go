@@ -41,3 +41,35 @@ func GetParticipants(ctx context.Context, projectID string) (participants []Part
 
 	return
 }
+
+type Replacer struct{
+	Before string `firestore:"before"`
+	After string `firestore:"after"`
+}
+
+func GetReplacers(ctx context.Context, projectID string) (replacers []Replacer, err error) {
+	client, err := firestore.NewClient(ctx, projectID)
+	if err != nil {
+		return
+	}
+
+	iter := client.Collection("rfa-replacers").Documents(ctx)
+	for {
+		var replacer Replacer
+
+		doc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			return replacers, err
+		}
+
+		if err = doc.DataTo(&replacer); err != nil {
+			return replacers, err
+		}
+		replacers = append(replacers, replacer)
+	}
+
+	return
+}

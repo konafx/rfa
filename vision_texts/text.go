@@ -7,6 +7,7 @@ import (
 )
 
 func ReplaceFalse(text string, replacers []firestore.Replacer) (trueText string) {
+	trueText = text
 	for _, replacer := range replacers {
 		if len(replacer.Before) == 0 && len(replacer.After) == 0 {
 			continue
